@@ -1,7 +1,10 @@
-(load "utils.fas")
-;;;------------------------------------------------
-;;;--------------------Accao-----------------------
-;;;------------------------------------------------
+; Luis Pedro Condeco - 79712; Pedro Ferreira - 79120; Tomas Agostinho - 73548
+; Grupo 91
+
+
+;;;--------------------------------------------------------
+;;;------------------------Accao---------------------------
+;;;--------------------------------------------------------
 
 ;;;cria-accao: inteiro x array -> accao
 ;; devolve par inteiro arreio
@@ -21,9 +24,9 @@
 	
 	
 	
-;;;------------------------------------------------
-;;;--------------------Tabuleiro-------------------
-;;;------------------------------------------------	
+;;;--------------------------------------------------------
+;;;------------------------Tabuleiro-----------------------
+;;;--------------------------------------------------------	
 
 
 ;;;cria-tabuleiro: {} -> tabuleiro
@@ -41,19 +44,7 @@
 		(setf (row-major-aref newtabuleiro i)
 			  (row-major-aref tabuleiro i)))
 	newtabuleiro))
-;;;----------------TESTES-----------------------------------------------------	
-;;(defvar t1 (cria-tabuleiro))   ;gera tabuleiro
-;;(defvar t2 (copia-tabuleiro t1)) ;copia tabuleiro para t2
-;;(print t1) 
-;;(print "----------------------------------------------------")
-;;(print t2);verifica que t2 e igual a t1
-;;(print "++++++++++++++++++++++++++++++++++++++++++++++++++++")
-;;(dotimes (i 10)   ;altera t1
-;;(setf (aref t1 i i) 123))
-;;(print t1);verifica que t1 foi alterado
-;;(print "----------------------------------------------------")
-;;(print t2);verifica que apesar de t1 ter sido alteraddo t2 mantem se igual
-;;-----------------------------------------------------------------------------
+
 
 
 ;;;tabuleiro-preenchido-p: tabuleiro x inteiro x inteiro -> logico
@@ -69,12 +60,7 @@
 		((eql t (aref tabuleiro linha coluna))
 		(setf flag t)))
 	flag))))
-;;;----------------TESTES-----------------------------------------------------	
-;;(defvar t1 (cria-tabuleiro))  cria tabuleiro
-;;(print (tabuleiro-preenchido-p t1 0 0))   verifica que esta vazia
-;;(setf (aref t1 0 0) t)                    muda o valor verificado acima para preenchido
-;;(print (tabuleiro-preenchido-p t1 0 0))   verifica que defacto esta preenchido
-;;-----------------------------------------------------------------------------
+
 
 
 ;;;tabuleiro-altura-coluna: tabuleiro x inteiro -> inteiro
@@ -88,12 +74,6 @@
 			(setf linha altura))))
 	(if (> linha 0)(incf linha))
 	linha))
-;;;----------------TESTES-----------------------------------------------------	
-;;
-;; 
-;; 
-;; 
-;;-----------------------------------------------------------------------------
 
 
 ;;;tabuleiro-linha-completa-p: tabuleiro x inteiro -> logico
@@ -105,12 +85,7 @@
 		(cond
 			((eq nil (aref tabuleiro linha y)) (setf flag nil))))
 		flag))
-;;;----------------TESTES-----------------------------------------------------	
-;;
-;; 
-;; 
-;; 
-;;-----------------------------------------------------------------------------
+
 
 
 ;;;tabuleiro-preenche!: tabuleiro x inteiro x inteiro -> {}
@@ -121,12 +96,7 @@
 				(>= linha 0) (<= linha 17)
 				(>= coluna 0) (<= coluna 9))
 			(setf (aref tabuleiro linha coluna) t))));;tnao sei o que devolver
-;;;----------------TESTES-----------------------------------------------------	
-;;
-;; 
-;; 
-;; 
-;;-----------------------------------------------------------------------------
+
 
 
 ;;;tabuleiro-remove-linha!: tabuleiro x inteiro -> {}
@@ -139,17 +109,7 @@
 				(setf (aref tabuleiro i y) (aref tabuleiro (1+ i) y)))))
 	(dotimes (y 10)
 		(setf (aref tabuleiro 17 y) nil)))
-;;;----------------TESTES-----------------------------------------------------	
-;;(defvar t1 (cria-tabuleiro))
-;;(dotimes (x 10) (setf (aref t1 16 x) t))
-;;(print t1)
-;;(print "-----------------------------------------------------") 
-;;(dotimes (x 10) (setf (aref t1 17 x) t))
-;;(print t1)
-;;(print "-----------------------------------------------------") 
-;;(tabuleiro-remove-linha! t1 17)             ;verifica que apaga uma linha e a outra cai um nivel
-;;(print t1)
-;;-----------------------------------------------------------------------------		
+
 
 
 ;;;tabuleiro-topo-preenchido-p: tabuleiro -> logico
@@ -161,13 +121,6 @@
 		(cond
 			((eq t (aref tabuleiro 17 y)) (setf flag t))))
 	flag))
-;;;----------------TESTES-----------------------------------------------------	
-;;(defvar t1 (cria-tabuleiro))
-;;(dotimes (x 10) (setf (aref t1 16 x) t))
-;;(print (tabuleiro-topo-preenchido-p t1))
-;;(setf (aref t1 17 4) t)
-;;(print (tabuleiro-topo-preenchido-p t1))
-;;-----------------------------------------------------------------------------
 
 
 ;;;tabuleiros-iguais-p: tabuleiro x tabuleiro -> logico
@@ -180,14 +133,7 @@
 		(cond
 			((not(eq (row-major-aref t1 i) (row-major-aref t2 i))) (setf flag nil))))
 	flag))
-;;;----------------TESTES-----------------------------------------------------	
-;;(defvar t1 (cria-tabuleiro))
-;;(dotimes (x 10) (setf (aref t1 16 x) t))
-;;(defvar t2 (copia-tabuleiro t1))
-;;(print (tabuleiros-iguais-p t1 t2))   ;dois iguais
-;;(setf (aref t2 17 4) t)  ;altera t2
-;;(print (tabuleiros-iguais-p t1 t2))  ;verifica que sao diferentes
-;;-----------------------------------------------------------------------------		
+
 
 
 ;;;tabuleiro->array: tabuleiro -> array
@@ -198,12 +144,6 @@
 	(dotimes (i (array-total-size tabuleiro))
 		(setf (row-major-aref arreio i)(row-major-aref tabuleiro i)))
 	arreio))
-;;;----------------TESTES-----------------------------------------------------	
-;;
-;; 
-;; 
-;; 
-;;-----------------------------------------------------------------------------	
 
 
 ;;;array->tabuleiro: array -> tabuleiro
@@ -214,22 +154,16 @@
 	(dotimes (i (array-total-size arreio))
 		(setf (row-major-aref tabuleiro i)(row-major-aref arreio i)))
 	tabuleiro))
-;;;----------------TESTES-----------------------------------------------------	
-;;
-;; 
-;; 
-;; 
-;;-----------------------------------------------------------------------------	
 
 
 
-;;;------------------------------------------------
-;;;--------------------Estado----------------------
-;;;------------------------------------------------	
+;;;--------------------------------------------------------
+;;;------------------------Estado--------------------------
+;;;--------------------------------------------------------	
 
 
 ;;; estrutura do estado, representa o estado de um jogo de Tetris
-(defstruct estado pontos pecas-por-colocar pecas-colocadas tabuleiro)
+(defstruct estado (pontos 0) pecas-por-colocar pecas-colocadas tabuleiro)
 
 ;;; copia-estado: estado -> estado
 ;;  recebe um estado e devolve um novo estado que e uma copia, independete do original
@@ -257,28 +191,11 @@
 		t)
 		(t nil)))
 
-;;;---------------------TESTES-----------------------------------------------------------
-;estados-iguais-p
-;(setf array1 (make-array '(3 3) :initial-contents '((0 1 2 ) (3 4 5) (6 7 8))))		 
-;(setf array2 (make-array '(3 3) :initial-contents '((2 2 2 ) (3 4 5) (6 7 8))))
-;(setf e1 (make-estado :pontos 100 :pecas-por-colocar 100 :pecas-colocadas 10 :tabuleiro array1 ))
-;(setf e2 (make-estado :pontos 100 :pecas-por-colocar 100 :pecas-colocadas 10 :tabuleiro array2 ))
-;(print "TESTE ESTADOS IGUAIS:")
-;(print (estados-iguais-p e1 e2))
-
-;copia-estado
-;(print "TESTE copia-estado:")
-;(setf copia (copia-estado e1))
-;(print copia)
-;(setf (estado-pecas-por-colocar copia) 5)
-;(print copia)
-;(print e1) ;nao e alterado quando copia e alterado
 
 
-
-;;;------------------------------------------------
-;;;--------------------Problema-------------------
-;;;------------------------------------------------	
+;;;--------------------------------------------------------
+;;;------------------------Problema------------------------
+;;;--------------------------------------------------------	
 
 (defstruct problema estado-inicial solucao accoes resultado custo-caminho)
 
@@ -321,10 +238,11 @@
 		
 ;;;qualidade: estado -> inteiro
 ;; recebe um estado e retorna um valor de qualidade 
-;;que corresponde ao valor negativo dos pontos ganhos ate ao momento  
+;; que corresponde ao valor negativo dos pontos ganhos ate ao momento  
 (defun qualidade (e1)
 	(* -1 (estado-pontos e1)))
 
+	
 ;;;resultado: estado x accao -> estado
 ;; recebe um estado e uma accao, devolve um novo estado que resulta de aplicar a accao
 ;; calcula pontos e remove linhas, quando aplicavel
@@ -384,6 +302,8 @@
 				(3 (setf (estado-pontos e2) (+ (estado-pontos e2) 500)))
 				(otherwise (setf (estado-pontos e2) (+ (estado-pontos e2) 800))))))
 	e2))
+	
+	
 (defun custo-oportunidade (e1)
 	(let(
 		(pontos 0))
