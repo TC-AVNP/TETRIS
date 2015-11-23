@@ -1,7 +1,6 @@
 ; Luis Pedro Condeco - 79712; Pedro Ferreira - 79120; Tomas Agostinho - 73548
 ; Grupo 91
 
-
 ;;;--------------------------------------------------------
 ;;;------------------------Accao---------------------------
 ;;;--------------------------------------------------------
@@ -71,8 +70,7 @@
 	(dotimes (altura 18)
 		(cond
 			((eq t (aref tabuleiro altura coluna))
-			(setf linha altura))))
-	(if (> linha 0)(incf linha))
+				(setf linha (+ 1 altura)))))
 	linha))
 
 
@@ -255,30 +253,35 @@
 		(altura 0) (ACERTA 0) (ACERTA2 0)							;comeca na altura minima
 		(peca-colocada) (linhas-completas 0) (tab2))
 		(setf tab2 (estado-tabuleiro e2))
-
 	;;descobrir a primeira true da coluna da peca
+(if (= linha-alta 0) (setf ACERTA 0)
+(block amen
 	(dotimes (i nr-linhas-peca)
 		(if 
-			(eq t (aref tab i 0))
+			(eq t (aref peca i 0))
 			(progn
 				(setf ACERTA i)   ;;ACERTA e o valor correcto que se tem de adiciona para comecar
-				(return))))
+				(return-from amen))))))
 	;;descobrir onde a peca encaixa
 	(block um
-		(dotimes (x nr-linhas-peca)
+		(dotimes (xzy (- 18 linha-alta))
+			(block dois
 				(setf altura (- (+ ACERTA2 linha-alta) ACERTA))
-			(dotimes (y nr-colunas-peca)
-				(if (and
-						(eq t (aref peca x y)) 											;so da problema quando o sitio da peca e t num
-						(eq t (tabuleiro-preenchido-p tab (- (+ x ACERTA2 linha-alta) ACERTA) coluna-esq)))	;lugar onde o tabuleiro tb e t	
-					(progn
-						(setf ACERTA2 (+ 1 ACERTA2))
-						(return-from um))))))
-	
+			(dotimes (x nr-linhas-peca)
+				(dotimes (y nr-colunas-peca)
+					(if (and
+							(eq t (aref peca x y)) 											;so da problema quando o sitio da peca e t num
+							(eq t (tabuleiro-preenchido-p tab (+ x altura) (+ y coluna-esq))))	;lugar onde o tabuleiro tb e t	
+						(progn
+							(setf ACERTA2 (+ 1 ACERTA2))
+							(return-from dois)))))
+							(return-from um))))
+		
 	;;Colocar a peca no tabuleiro
 	(dotimes (i nr-linhas-peca)
 		(dotimes (j nr-colunas-peca)
-			(tabuleiro-preenche! (estado-tabuleiro e2) (+ i altura) (+ j coluna-esq))))
+			(if (aref peca i j)
+				(tabuleiro-preenche! (estado-tabuleiro e2) (+ i altura) (+ j coluna-esq)))))
 	
 	;;Atualizar lista de pecas por colocar e lista pecas colocadas
 	(setf peca-colocada (car (estado-pecas-por-colocar e2))) ;;nome da peca esta em 1 lugar na lista
