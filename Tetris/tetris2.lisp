@@ -1,6 +1,5 @@
 ; Luis Pedro Condeco - 79712; Pedro Ferreira - 79120; Tomas Agostinho - 73548
 ; Grupo 91
-
 ;;;--------------------------------------------------------
 ;;;------------------------Accao---------------------------
 ;;;--------------------------------------------------------
@@ -215,21 +214,21 @@
 ;;
 (defun accoes (e1)
 	(let(
-	(peca (car (estado-pecas-por-colocar e1)))
-	(lista nil)
-	(jogadas (list )))
-	(cond
-		((eq 'i peca) (setf lista(list peca-i0 peca-i1)))
-		((eq 'j peca) (setf lista(list peca-j0 peca-j1 peca-j2 peca-j3)))
-		((eq 'l peca) (setf lista(list peca-l0 peca-l1 peca-l2 peca-l3)))
-		((eq 'o peca) (setf lista(list peca-o0)))
-		((eq 's peca) (setf lista(list peca-s0 peca-s1)))
-		((eq 'z peca) (setf lista(list peca-z0 peca-z1)))
-		((eq 't peca) (setf lista(list peca-t0 peca-t1 peca-t2 peca-t3))))
-	(dolist (peca lista)
-		(dotimes (coluna (- 11 (cadr (array-dimensions	peca))))
-		(setf jogadas (append jogadas (list (cria-accao coluna peca))))))
-	jogadas))
+		(peca (car (estado-pecas-por-colocar e1)))
+		(lista nil)
+		(jogadas (list )))
+		(cond
+			((eq 'i peca) (setf lista(list peca-i0 peca-i1)))
+			((eq 'j peca) (setf lista(list peca-j0 peca-j1 peca-j2 peca-j3)))
+			((eq 'l peca) (setf lista(list peca-l0 peca-l1 peca-l2 peca-l3)))
+			((eq 'o peca) (setf lista(list peca-o0)))
+			((eq 's peca) (setf lista(list peca-s0 peca-s1)))
+			((eq 'z peca) (setf lista(list peca-z0 peca-z1)))
+			((eq 't peca) (setf lista(list peca-t0 peca-t1 peca-t2 peca-t3))))
+		(dolist (peca lista)
+			(dotimes (coluna (- 11 (cadr (array-dimensions	peca))))
+				(setf jogadas (append jogadas (list (cria-accao coluna peca))))))
+			jogadas))
 		 
 	
 	
@@ -320,3 +319,4 @@
 				(eq peca 't)(eq peca 'o)) (setf pontos (+ pontos 300)))))
 	(setf pontos (- pontos (estado-pontos e1)))
 	pontos))
+; (load "utils.fas")

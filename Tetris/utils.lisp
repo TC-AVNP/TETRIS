@@ -170,8 +170,8 @@
 				   
 				   
 				   
-(setf estado1 (make-estado :pontos 0 :pecas-por-colocar '(t i j t z j) :pecas-colocadas '() :tabuleiro (cria-tabuleiro)))
-(desenha-estado estado1)
+; (setf estado1 (make-estado :pontos 0 :pecas-por-colocar '(t i j t z j) :pecas-colocadas '() :tabuleiro (cria-tabuleiro)))
+; (desenha-estado estado1)
 ; (format t"~%......................................................~%")
 ; (setf estado2 (resultado estado1 '(0 . #2A((T T T)(NIL T NIL)))))
 ; (desenha-estado estado2)
@@ -190,26 +190,26 @@
 ; (setf estado2 (resultado estado2 '(4 . #2A((T T)(T T)))))
 ; (desenha-estado estado2)
 
-(setf estado2 (resultado estado1 (cria-accao 1 peca-o0)))
-(setf estado2 (resultado estado2 (cria-accao 1 peca-i0)))
-(setf estado2 (resultado estado2 (cria-accao 0 peca-i1)))
-(setf estado2 (resultado estado2 (cria-accao 3 peca-t3)))
-(setf estado2 (resultado estado2 (cria-accao 5 peca-l1)))
-(setf estado2 (resultado estado2 (cria-accao 5 peca-o0)))
-(setf estado2 (resultado estado2 (cria-accao 7 peca-o0)))
-(setf estado2 (resultado estado2 (cria-accao 8 peca-o0)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-o0)))
-(setf estado2 (resultado estado2 (cria-accao 5 peca-i0)))
-(desenha-estado estado2)
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
-(setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
-(desenha-estado estado2)
+											; (setf estado2 (resultado estado1 (cria-accao 1 peca-o0)))
+											; (setf estado2 (resultado estado2 (cria-accao 1 peca-i0)))
+											; (setf estado2 (resultado estado2 (cria-accao 0 peca-i1)))
+											; (setf estado2 (resultado estado2 (cria-accao 3 peca-t3)))
+											; (setf estado2 (resultado estado2 (cria-accao 5 peca-l1)))
+											; (setf estado2 (resultado estado2 (cria-accao 5 peca-o0)))
+											; (setf estado2 (resultado estado2 (cria-accao 7 peca-o0)))
+											; (setf estado2 (resultado estado2 (cria-accao 8 peca-o0)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-o0)))
+											; (setf estado2 (resultado estado2 (cria-accao 5 peca-i0)))
+											; (desenha-estado estado2)
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i1)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
+											; (setf estado2 (resultado estado2 (cria-accao 6 peca-i0)))
+; (desenha-estado estado2)
 ; (setf t1 (cria-tabuleiro))
 ; (setf (aref t1 0 0) t)
 ; (print(tabuleiro-altura-coluna t1 0))
@@ -221,7 +221,46 @@
 
 
 
+(defvar t1 (cria-tabuleiro))
+(dotimes (coluna 9)
+	(tabuleiro-preenche! t1 0 coluna))
+(dotimes (coluna 9)
+	(tabuleiro-preenche! t1 1 coluna))
+(defvar e1 (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i)))
 
+(defvar p1
+	(make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i))
+				   :solucao #'solucao
+				   :accoes #'accoes
+				   :resultado #'resultado
+				   :custo-caminho #'custo-oportunidade))
+(defvar p2 (copy-problema p1))
+(setf acs (funcall (problema-accoes p2) (problema-estado-inicial p2)))
+(setf accao (car acs))
+(setf estado (funcall (problema-resultado p1) (problema-estado-inicial p1) accao))
+
+(print p2)
+
+(setf (problema-estado-inicial p2) estado)
+(print "--------------------------------------------------------------------------------")
+(print p2)
+
+(print (equalp p1 p2))
+
+
+
+; (defstruct ai ox)
+; (defvar oi (make-ai :ox 3))
+; (defvar aii (copy-ai oi))
+; (print oi)
+; (print aii)
+; (print(equalp oi aii))
+; (print "------------")
+; (setf (ai-ox aii) 4)
+
+; (print oi)
+; (print aii)
+; (print(equalp oi aii))
 
 
 
