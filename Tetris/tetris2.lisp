@@ -319,4 +319,51 @@
 				(eq peca 't)(eq peca 'o)) (setf pontos (+ pontos 300)))))
 	(setf pontos (- pontos (estado-pontos e1)))
 	pontos))
+	
+	
+	
+(defun procura-pp (p)
+	(let 
+		((my-hash (make-hash-table))
+		(opened) (closed)
+		(listaaccoes (funcall (problema-accoes p) (problema-estado-inicial p)))
+		(estado))
+		
+		(setf estado (funcall (problema-resultado p) (problema-estado p) (car listaacoes)))
+		(setf (hasget 
+		
+		
+		))
+		
+		(setf a (make-array '(2 2)))
+		(print (car a))
+
+
+
+
+
+
+
+		; (let ((a (make-estado))(my-hash (make-hash-table))) (setf (gethash 1 my-hash) "lool") (setf (gethash 2 my-hash) a)
+		; (setf (gethash 10 my-hash) "a") (setf (gethash 5 my-hash) "b")
+		; (print (gethash 1 my-hash))
+		; (maphash #'(lambda(k v)(print k)) my-hash)))
+		
+		
+	
+	
+; (procura-pp 3)	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 ; (load "utils.fas")

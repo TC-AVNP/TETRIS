@@ -221,31 +221,31 @@
 
 
 
-(defvar t1 (cria-tabuleiro))
-(dotimes (coluna 9)
-	(tabuleiro-preenche! t1 0 coluna))
-(dotimes (coluna 9)
-	(tabuleiro-preenche! t1 1 coluna))
-(defvar e1 (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i)))
+; (defvar t1 (cria-tabuleiro))
+; (dotimes (coluna 9)
+	; (tabuleiro-preenche! t1 0 coluna))
+; (dotimes (coluna 9)
+	; (tabuleiro-preenche! t1 1 coluna))
+; (defvar e1 (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i)))
 
-(defvar p1
-	(make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i))
-				   :solucao #'solucao
-				   :accoes #'accoes
-				   :resultado #'resultado
-				   :custo-caminho #'custo-oportunidade))
-(defvar p2 (copy-problema p1))
-(setf acs (funcall (problema-accoes p2) (problema-estado-inicial p2)))
-(setf accao (car acs))
-(setf estado (funcall (problema-resultado p1) (problema-estado-inicial p1) accao))
+; (defvar p1
+	; (make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i))
+				   ; :solucao #'solucao
+				   ; :accoes #'accoes
+				   ; :resultado #'resultado
+				   ; :custo-caminho #'custo-oportunidade))
+; (defvar p2 (copy-problema p1))
+; (setf acs (funcall (problema-accoes p2) (problema-estado-inicial p2)))
+; (setf accao (car acs))
+; (setf estado (funcall (problema-resultado p1) (problema-estado-inicial p1) accao))
 
-(print p2)
+; (print p2)
 
-(setf (problema-estado-inicial p2) estado)
-(print "--------------------------------------------------------------------------------")
-(print p2)
+; (setf (problema-estado-inicial p2) estado)
+; (print "--------------------------------------------------------------------------------")
+; (print p2)
 
-(print (equalp p1 p2))
+; (print (equalp p1 p2))
 
 
 
@@ -261,12 +261,6 @@
 ; (print oi)
 ; (print aii)
 ; (print(equalp oi aii))
-
-
-
-
-
-
 
 
 
