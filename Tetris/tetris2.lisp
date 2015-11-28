@@ -213,6 +213,9 @@
 ;;;accoes: estado -> lista de accoes
 ;;
 (defun accoes (e1)
+	(if 
+		(estado-final-p e1)
+		(return-from accoes nil))
 	(let(
 		(peca (car (estado-pecas-por-colocar e1)))
 		(lista nil)
@@ -321,22 +324,146 @@
 	pontos))
 	
 	
+;;;estruturas nodes para as pesquisas----------------------------
+(defstruct node estado pai accao)
+
+(defun cria-node (estado pai accao)
+  (make-node 
+		:estado estado 
+		:pai pai
+		:accao accao))
+		
+;;;remove primeiro elemento de uma lista
+(defun removeprimeiro (n list)
+  (remove-if (constantly t) list :start (1- n) :count 1))
 	
+;;;funcoes misc
+(defun problemaover (p)
+	(if
+		(estado-final-p (problema-estado-inicial p))
+		t
+		nil))
+;;-----------------------pesquisas----------------------------
 (defun procura-pp (p)
-	(let 
-		((my-hash (make-hash-table))
-		(opened) (closed)
-		(listaaccoes (funcall (problema-accoes p) (problema-estado-inicial p)))
-		(estado))
+	(let
+		((counter 0)(noded (cria-node p nil (funcall (problema-accoes p) (problema-estado-inicial p))))
+		(node-pai) (accoes) (estado) (problematico)
+		(closed '()) (accoessolucao '()))
+; (print noded)
+		(loop do
+(print counter)
+			(if 
+				(funcall (problema-solucao (node-estado noded)) (problema-estado-inicial (node-estado noded)))	;se for solucao
+				(progn																							;percorre arvore para cima				
+(print " VOUDEVOLVERSOLUCAOVOUDEVOLVERSOLUCAOVOUDEVOLVERSOLUCAOVOUDEVOLVERSOLUCAO") ;;;;;;;;;;;;;;;;;;;
+					(loop do
+(print "------------------------------------------------------------")				
+; (print (node-pai noded))															;e vai adicionando accoes a lista
+						(if
+							(not (eq (car (node-accao noded)) nil))
+							(progn (print "foi sim")
+							(push (car (node-accao noded)) accoessolucao))
+							(print " nao foi"))
+						(setf noded (node-pai noded))
+					while (not (eq noded nil)))
+					(return-from procura-pp accoessolucao))											;depois do ciclo retorna a lista de accoes
+					
+				(progn
+(print " vou comecar a expandir")	
+					(setf estado (funcall 													;estado gerado por o resultado da primeira accao da lista
+									(problema-resultado (node-estado noded)) 
+									(problema-estado-inicial (node-estado noded)) 
+									(car (node-accao noded))))
+(print (solucao estado))
+(print(funcall (problema-solucao (node-estado noded)) estado))				
+					(block blocosolucao
+					(block bloqueio
+						(if 
+							(funcall (problema-solucao (node-estado noded)) estado)		;se for um estado solucao
+							(progn
+(print "aleluiiaaaaaaaaa uma solucao foi encontrada!!")
+								(setf problematico (copy-problema (node-estado noded)))
+								(setf (problema-estado-inicial problematico) (copia-estado estado))
+								(setf noded 												;proximo no
+									(cria-node
+											problematico 
+											(copy-node noded)
+											nil))										;faz return e faz o ciclo
+								(return-from blocosolucao)))							;para devolver a lista
+
+								
+						(if																
+							(and (eq (node-accao noded) nil) (not (eq (node-pai noded) nil)))	;node morto
+							(progn
+								(setf noded (node-pai noded))
+								(setf (node-accao noded) (cdr (node-accao noded)))
+								(return-from bloqueio)))
+								
+						(if
+							(estado-final-p estado)									;estado final sem solucao
+							(progn														
+								(setf (node-accao noded) (cdr (node-accao noded)))
+								(return-from bloqueio)))                          	;so gera novo estado se nao for final sem solucao
+								
+						(setf problematico (copy-problema (node-estado noded)))
+						(setf (problema-estado-inicial problematico) (copia-estado estado))
+(print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLEEEEEEEEEEEEEEEEEEEEEEEEEEE")	
+						(setf noded 												;proximo no
+									(cria-node
+											problematico 
+											noded
+											(funcall (problema-accoes (node-estado noded)) estado))))))) ;fim do block bloqueio ;blocosolucao
+(incf counter)					
+		while (not(and (eq (node-accao noded) nil) (eq (node-pai noded) nil))))
+		nil))
 		
-		(setf estado (funcall (problema-resultado p) (problema-estado p) (car listaacoes)))
-		(setf (hasget 
+		
+
+(defun cena (p)
+(let ((noded p) (accoessolucao '()) (node-pai))
+(loop do	
+						(push (car (node-accao noded)) accoessolucao)
+						(setf noded (node-pai noded))
+					while (not (eq noded nil)))
+accoessolucao))					
+			
+(setf um (cria-node "oUM" nil '(1 2 3 4)))
+(setf dois (cria-node "oDois" um '(2 3 4)))
+(setf tres (cria-node "oTres" dois '(3 4)))
+(setf quatro (cria-node "oQuatro" tres '(4 5 6)))
+
+ 
+		
+		; (print opened))))
+	
+
+	
+	; (setf b 1994)
+	; (setf a '(1 99 4 5 6 4 2))
+	; (push b a)
+	; (print a)
+	; (setf b 333)
+	; (push b a)
+	; (print a)
+	
+	
+	
+	
+	
+	
+		; ((my-hash (make-hash-table))
+		; (opened) (closed)
+		; (listaaccoes (funcall (problema-accoes p) (problema-estado-inicial p)))
+		; (estado))
+		
+		; (setf estado (funcall (problema-resultado p) (problema-estado p) (car listaacoes)))
+		; (setf (hasget 
 		
 		
-		))
+		; ))
 		
-		(setf a (make-array '(2 2)))
-		(print (car a))
+		; (setf a (make-array '(2 2)))
+		; (print (car a))
 
 
 
@@ -352,12 +479,11 @@
 		
 	
 	
-; (procura-pp 3)	
+; (print (procura-pp 3))
 	
 	
-	
-	
-	
+;;;;;;;;;;;;;;;;;;;;TESTES
+
 	
 	
 	

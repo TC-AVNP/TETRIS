@@ -223,17 +223,63 @@
 
 ; (defvar t1 (cria-tabuleiro))
 ; (dotimes (coluna 9)
-	; (tabuleiro-preenche! t1 0 coluna))
+	; (tabuleiro-preenche! t1 16 coluna))
 ; (dotimes (coluna 9)
 	; (tabuleiro-preenche! t1 1 coluna))
 ; (defvar e1 (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i)))
 
 ; (defvar p1
-	; (make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i))
+	; (make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i i))
 				   ; :solucao #'solucao
 				   ; :accoes #'accoes
 				   ; :resultado #'resultado
 				   ; :custo-caminho #'custo-oportunidade))
+				   
+
+			
+; (print (problemaover p1))	
+; (print (accoes e1))
+; (desenha-estado (problema-estado-inicial p1))
+; (print (cdr(funcall (problema-accoes p1) (problema-estado-inicial p1))))
+; (print (problemaover p1))
+; (setf p2 (copy-problema p1))
+; (print (equalp p1 p2))
+; (setf (problema-estado-inicial p1) 
+						; (funcall 
+							; (problema-resultado p1) (problema-estado-inicial p1) 
+							; (car 
+							; (funcall 
+								; (problema-accoes p1) 
+								; (problema-estado-inicial p1)))))
+								; (print (problemaover p1))
+; (print "aqui ->")(print (equalp p1 p2))
+; (desenha-estado (problema-estado-inicial p1))
+; (print (problema-estado-inicial p1))
+; (print "yyyyyyyyyyyyyyyyyyyyyyy")
+; (print (problemaover p1))
+; (print "yyyyyyyyyyyyyyyyyyyyyyy")
+; (setf (problema-estado-inicial p1) 
+						; (funcall 
+							; (problema-resultado p1) (problema-estado-inicial p1) 
+							; (car 
+							; (funcall 
+								; (problema-accoes p1) 
+								; (problema-estado-inicial p1)))))
+								
+; (print p1)
+; (print p2)
+
+		   
+				   
+				   
+				   
+				   
+				   
+				   
+				   
+				   
+				   
+				   
 ; (defvar p2 (copy-problema p1))
 ; (setf acs (funcall (problema-accoes p2) (problema-estado-inicial p2)))
 ; (setf accao (car acs))
@@ -266,3 +312,17 @@
 
 
 
+;;; testes
+
+
+(setf t1 (cria-tabuleiro))
+(setf prob1 
+	(make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i i i i i))
+				   :solucao #'solucao
+				   :accoes #'accoes
+				   :resultado #'resultado
+				   :custo-caminho #'custo-oportunidade))
+				   
+				   
+	
+	(print (procura-pp prob1))
