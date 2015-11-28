@@ -247,28 +247,27 @@
 ;; recebe um estado e uma accao, devolve um novo estado que resulta de aplicar a accao
 ;; calcula pontos e remove linhas, quando aplicavel
 (defun resultado (e1 a1)
-	(let( 
+	(let(
+		(listalinha '())
 		(e2 (copia-estado e1)) (coluna-esq (accao-coluna a1)) 		;novo estado para devolver no fim ;coluna mais a esquerda onde a peca ficara
 		(peca (accao-peca a1)) (tab (estado-tabuleiro e1))			;desenho da peca (array) ;tabuleiro
 		(linha-alta (tabuleiro-altura-coluna (estado-tabuleiro e1) (accao-coluna a1)))	;linha mais alta da coluna-esq
 		(nr-linhas-peca (array-dimension (accao-peca a1) 0)) (nr-colunas-peca (array-dimension (accao-peca a1) 1))
-		(altura 0) (ACERTA 0) (ACERTA2 0)							;comeca na altura minima
+		(altura 0) (ACERTA2 0)							;comeca na altura minima
 		(peca-colocada) (linhas-completas 0) (tab2))
 		(setf tab2 (estado-tabuleiro e2))
 	;;descobrir a primeira true da coluna da peca
-(if (= linha-alta 0) (setf ACERTA 0)
-(block amen
-	(dotimes (i nr-linhas-peca)
-		(if 
-			(eq t (aref peca i 0))
-			(progn
-				(setf ACERTA i)   ;;ACERTA e o valor correcto que se tem de adiciona para comecar
-				(return-from amen))))))
+(print linha-alta)
+				
+(dotimes (x nr-colunas-peca)
+				(push (tabuleiro-altura-coluna tab (+ x coluna-esq)) listalinha))
+(setf linha-alta (max-list listalinha))
+				
 	;;descobrir onde a peca encaixa
 	(block um
 		(dotimes (xzy (- 18 linha-alta))
 			(block dois
-				(setf altura (- (+ ACERTA2 linha-alta) ACERTA))
+				(setf altura (+ ACERTA2 linha-alta))
 			(dotimes (x nr-linhas-peca)
 				(dotimes (y nr-colunas-peca)
 					(if (and
@@ -338,11 +337,12 @@
   (remove-if (constantly t) list :start (1- n) :count 1))
 	
 ;;;funcoes misc
-(defun problemaover (p)
-	(if
-		(estado-final-p (problema-estado-inicial p))
-		t
-		nil))
+(defun max-list(lista)
+	(let ((maximum (car lista))) 
+	(dolist (x lista)
+		 (if (> x maximum)
+			(setf maximum x)))
+	maximum))
 ;;-----------------------pesquisas----------------------------
 (defun procura-pp (p)
 	(let
@@ -362,7 +362,7 @@
 						(if
 							(not (eq (car (node-accao noded)) nil))
 							(progn (print "foi sim")
-							(push (car (node-accao noded)) accoessolucao))
+							(push (car(last (node-accao noded))) accoessolucao))
 							(print " nao foi"))
 						(setf noded (node-pai noded))
 					while (not (eq noded nil)))
@@ -373,7 +373,7 @@
 					(setf estado (funcall 													;estado gerado por o resultado da primeira accao da lista
 									(problema-resultado (node-estado noded)) 
 									(problema-estado-inicial (node-estado noded)) 
-									(car (node-accao noded))))
+									(car (last (node-accao noded)))))
 (print (solucao estado))
 (print(funcall (problema-solucao (node-estado noded)) estado))				
 					(block blocosolucao
@@ -396,13 +396,13 @@
 							(and (eq (node-accao noded) nil) (not (eq (node-pai noded) nil)))	;node morto
 							(progn
 								(setf noded (node-pai noded))
-								(setf (node-accao noded) (cdr (node-accao noded)))
+								(setf (node-accao noded) (reverse (cdr (reverse(node-accao noded)))))
 								(return-from bloqueio)))
 								
 						(if
 							(estado-final-p estado)									;estado final sem solucao
 							(progn														
-								(setf (node-accao noded) (cdr (node-accao noded)))
+								(setf (node-accao noded) (reverse (cdr (reverse (node-accao noded)))))
 								(return-from bloqueio)))                          	;so gera novo estado se nao for final sem solucao
 								
 						(setf problematico (copy-problema (node-estado noded)))
@@ -422,7 +422,7 @@
 (defun cena (p)
 (let ((noded p) (accoessolucao '()) (node-pai))
 (loop do	
-						(push (car (node-accao noded)) accoessolucao)
+						(push (car (last (node-accao noded))) accoessolucao)
 						(setf noded (node-pai noded))
 					while (not (eq noded nil)))
 accoessolucao))					
