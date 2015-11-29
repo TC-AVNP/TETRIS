@@ -457,7 +457,7 @@
 		
 (defun procura-A* (p h)
 	(let
-		((opened '()) (closed '()) (solucao '())    																					;listas
+		((opened '()) (closed '()) (solucao '()) (sol '()) (flag nil)   																					;listas
 		(novonode) (novoestado)																								   			;nos novos
 		(fresultado (problema-resultado p)) (faccoes (problema-accoes p))
 		(fcusto (problema-custo-caminho p)) (fsolucao (problema-solucao p))										 						;funcoes
@@ -475,11 +475,16 @@
 		(block soluxion
 			(loop do
 				(setf noded (escolhe-novo-no opened))												;escolhe no com custo menor
+
+(print "---------------------------------------------------------")				
+(dolist (x opened)
+(print (node-A*-custo x)))
+(print "---------------------------------------------------------")
 				(setf opened (remove noded opened))												;apaga o no da lista de abertos
 				(push noded closed)																	;adiciona a lista dos fechados
-				; (if
-					; (funcall solution-node-A* noded)
-					; (return-from soluxion))
+				(if
+					flag
+					(return-from soluxion))
 ;EXPANDIR NO
 				(dolist (x (reverse (funcall faccoes (node-A*-estado noded))))   					;lista de accoes
 						(setf novoestado (funcall fresultado (node-A*-estado noded) x))
@@ -490,18 +495,25 @@
 						(if
 							(funcall fsolucao novoestado)
 							(progn
-								(setf noded novonode)
-								(return-from soluxion)))
+								(push novonode sol)
+								(setf flag t)))
 						
 						(if 																		;verifica se pode adicionar o node aos abertos
 							(and
 								(not (eq (funcall faccoes novoestado) nil))							;estado final sem solucao
-								(not (esta-contido closed novonode)))								;existe na lista de fechados
+								(not (esta-contido closed novonode))								;existe na lista de fechados
+								(not (esta-contido opened novonode)))
 							(push novonode opened)))												;adiciona no a lista de abertos
 ; (print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")		
 			
 			while (not (eq opened nil))))															;fim do loop  lista opened vazia ;fecha o block soluxion
 ;CONSTROI A SOLUCAO
+			
+			(setf noded (escolhe-novo-no (reverse sol)))
+			(dolist (x sol)
+				(print (node-A*-custo x)))
+
+			
 			(setf solucao (constroi-caminho noded))
 		solucao))
 		
@@ -563,4 +575,4 @@
 	
 	
 	
-; (load "utils.fas")
+(load "utils.fas")
