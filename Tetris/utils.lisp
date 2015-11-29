@@ -1,4 +1,4 @@
-(load "tetris2.lisp")
+(load "tetris.lisp")
 
 ;;; definicao das configuracoes possiveis para cada peca
 ;;peca i 
@@ -161,7 +161,7 @@
 
 ; (desenha-estado e3)
 ; (defvar p1
-	; (make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i o j l t i))
+	; (make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '())
 				   ; :solucao #'solucao
 				   ; :accoes #'accoes
 				   ; :resultado #'resultado
@@ -315,14 +315,76 @@
 ;;; testes
 
 
-(setf t1 (cria-tabuleiro))
-(setf prob1 
-	(make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i i i i i))
-				   :solucao #'solucao
-				   :accoes #'accoes
-				   :resultado #'resultado
-				   :custo-caminho #'custo-oportunidade))
+ ; (defvar t1 (cria-tabuleiro))
+ ; (dotimes (x 17)
+; (dotimes (coluna 9)
+	; (tabuleiro-preenche! t1 x coluna)))
+
+; (setf e1 (make-estado :tabuleiro t1 :pecas-por-colocar '(i)))
+; (desenha-estado e1)
+; (setf prob1 
+	; (make-problema :estado-inicial (make-estado :tabuleiro t1 :pecas-por-colocar '(i i i o))
+				   ; :solucao #'solucao
+				   ; :accoes #'accoes
+				   ; :resultado #'resultado
+				   ; :custo-caminho #'custo-oportunidade))
+				   
+				   
 				   
 				   
 	
-	(print (procura-pp prob1))
+	; (print (procura-pp prob1))
+
+	
+;;;;;;;;;;;;;;;;;;;
+
+
+
+;;; Teste 14 E2 
+;;; procura profundidade primeiro num tabuleiro com algumas pecas
+;deve retornar IGNORE
+; (ignore-value (setf t1 (cria-tabuleiro)))
+; (ignore-value (dotimes (coluna 9) (tabuleiro-preenche! t1 0 (+ coluna 1))(tabuleiro-preenche! t1 1 (+ coluna 1))(tabuleiro-preenche! t1 2 (+ coluna 1))))
+; deve retornar uma lista de accoes (ver ficheiro output)
+; (print (procura-pp (make-problema :estado-inicial (make-estado :pontos 0 :tabuleiro t1 :pecas-colocadas () :pecas-por-colocar '(o o o o o l l t t j j i i)) :solucao #'solucao :accoes #'accoes :resultado #'resultado :custo-caminho #'(lambda (x) 0))))
+
+
+
+
+
+
+
+; (setf t1 (cria-tabuleiro))
+; (defvar e1 (make-estado :tabuleiro t1 :pecas-por-colocar '(i i i l t i)))
+; (setf a1 (cria-accao 5 peca-i0))
+; (setf e1 (resultado e1 a1))
+
+; (setf a1 (cria-accao 4 peca-i0))
+; (setf e1 (resultado e1 a1))
+
+; (setf a1 (cria-accao 6 peca-i0))
+; (setf e1 (resultado e1 a1))
+
+; (setf a1 (cria-accao 6 peca-o0))
+; (setf e1 (resultado e1 a1))
+
+; (setf a1 (cria-accao 5 peca-i1))
+; (setf e1 (resultado e1 a1))
+
+
+
+; (setf a1 (cria-accao 2 peca-i1))
+; (setf e1 (resultado e1 a1))
+; (desenha-estado e1)
+
+
+; (defun solution (p)
+	; (if
+		; (funcall (problema-solucao p) (problema-estado-inicial p))
+		; t
+		; nil))
+		
+		
+		
+		; (print "ola")
+		; (print (solution p1))

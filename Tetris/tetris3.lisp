@@ -429,7 +429,7 @@
 		(maximum (car lista)))
 	(dolist (x lista)
 		 (if 
-			(<= (node-A*-custo x) (node-A*-custo maximum))
+			(< (node-A*-custo x) (node-A*-custo maximum))
 			(setf maximum x)))
 	maximum))
 	
@@ -475,43 +475,49 @@
 		(block soluxion
 			(loop do
 				(setf noded (escolhe-novo-no opened))												;escolhe no com custo menor
-
-(print "---------------------------------------------------------")				
-(dolist (x opened)
-(print (node-A*-custo x)))
-(print "---------------------------------------------------------")
+(print "node inicial")
+(print (node-A*-accao noded))
+; (print "---------------------------------------------------------")				
+; (dolist (x opened)
+; (print (node-A*-custo x)))
+; (print "---------------------------------------------------------")
 				(setf opened (remove noded opened))												;apaga o no da lista de abertos
 				(push noded closed)																	;adiciona a lista dos fechados
 				(if
 					flag
 					(return-from soluxion))
 ;EXPANDIR NO
-				(dolist (x (reverse (funcall faccoes (node-A*-estado noded))))   					;lista de accoes
+(print "MUDA------------------------------------------------->")
+				(dolist (x (funcall faccoes (node-A*-estado noded)))   					;lista de accoes
 						(setf novoestado (funcall fresultado (node-A*-estado noded) x))
+						(print x)
 						(setf novonode (cria-node-A* 
 													novoestado x 
 													(funcall fcusto novoestado) (funcall h novoestado) 
 													(+ (funcall fcusto novoestado) (funcall h novoestado))  noded))
+													
 						(if
 							(funcall fsolucao novoestado)
-							(progn
+							(progn(print "ai")
+	(print (+ (funcall fcusto novoestado) (funcall h novoestado)))
 								(push novonode sol)
 								(setf flag t)))
 						
 						(if 																		;verifica se pode adicionar o node aos abertos
 							(and
 								(not (eq (funcall faccoes novoestado) nil))							;estado final sem solucao
-								(not (esta-contido closed novonode))								;existe na lista de fechados
-								(not (esta-contido opened novonode)))
-							(push novonode opened)))												;adiciona no a lista de abertos
+								(not (esta-contido closed novonode)))								;existe na lista de fechados
+								(progn (print "ai")
+	(print (+ (funcall fcusto novoestado) (funcall h novoestado)))
+							(push novonode opened))))												;adiciona no a lista de abertos
 ; (print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")		
 			
 			while (not (eq opened nil))))															;fim do loop  lista opened vazia ;fecha o block soluxion
 ;CONSTROI A SOLUCAO
 			
-			(setf noded (escolhe-novo-no (reverse sol)))
-			(dolist (x sol)
-				(print (node-A*-custo x)))
+			(setf noded (escolhe-novo-no sol))
+			; (dolist (x sol)
+				; (print (node-A*-custo x)))
 
 			
 			(setf solucao (constroi-caminho noded))
@@ -575,4 +581,4 @@
 	
 	
 	
-(load "utils.fas")
+; (load "utils.fas")
