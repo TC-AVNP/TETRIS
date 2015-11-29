@@ -247,58 +247,45 @@
 ;; recebe um estado e uma accao, devolve um novo estado que resulta de aplicar a accao
 ;; calcula pontos e remove linhas, quando aplicavel
 (defun resultado (e1 a1)
-	(let((listalinha '())
-		(e2 (copia-estado e1)) (coluna-esq (accao-coluna a1)) 		;novo estado para devolver no fim ;coluna mais a esquerda onde a peca ficara
+	(let
+		((e2 (copia-estado e1)) (coluna-esq (accao-coluna a1)) 		;novo estado para devolver no fim ;coluna mais a esquerda onde a peca ficara
 		(peca (accao-peca a1)) (tab (estado-tabuleiro e1))			;desenho da peca (array) ;tabuleiro
-		(linha-alta (tabuleiro-altura-coluna (estado-tabuleiro e1) (accao-coluna a1)))	;linha mais alta da coluna-esq
 		(nr-linhas-peca (array-dimension (accao-peca a1) 0)) (nr-colunas-peca (array-dimension (accao-peca a1) 1))
-		(altura 0) (ACERTA 0) (ACERTA2 0)							;comeca na altura minima
+		(folga 0) (teto) (listalinha '())
+		(linha-alta 0)
 		(peca-colocada) (linhas-completas 0) (tab2))
 		(setf tab2 (estado-tabuleiro e2))
-	;;descobrir a primeira true da coluna da peca
-(if (= linha-alta 0) (setf ACERTA 0)
-(block amen
-	(dotimes (i nr-linhas-peca)
-		(if 
-			(eq t (aref peca i 0))
-			(progn
-				(setf ACERTA i)   ;;ACERTA e o valor correcto que se tem de adiciona para comecar
-				(return-from amen))))))
-				
-(dotimes (x nr-colunas-peca)																	;linha mais alta
+		(setf teto (- 18 nr-linhas-peca))
+	(dotimes (x nr-colunas-peca)
 				(push (tabuleiro-altura-coluna tab (+ x coluna-esq)) listalinha))
-(setf linha-alta (max-list listalinha))
-
-
-	;;descobrir onde a peca encaixa
-	(block um
-		(dotimes (xzy (- 18 linha-alta))
-			(block dois
-				(setf altura (- (+ ACERTA2 linha-alta) ACERTA))
+	(setf linha-alta (max-list listalinha))
+	
+	(block gravidade
+		(loop for i from teto downto (max 0 (- linha-alta 2)) do
 			(dotimes (x nr-linhas-peca)
 				(dotimes (y nr-colunas-peca)
 					(if (and
 							(eq t (aref peca x y)) 											;so da problema quando o sitio da peca e t num
-							(eq t (tabuleiro-preenchido-p tab (+ x altura) (+ y coluna-esq))))	;lugar onde o tabuleiro tb e t	
-						(progn
-							(setf ACERTA2 (+ 1 ACERTA2))
-							(return-from dois)))))
-							(return-from um))))
-		
+							(eq t (tabuleiro-preenchido-p tab (+ x i) (+ y coluna-esq))))	;lugar onde o tabuleiro tb e t
+							(progn 
+								(setf folga (+ i 1))
+								(return-from gravidade)))))))
+								
+
 	;;Colocar a peca no tabuleiro
 	(dotimes (i nr-linhas-peca)
-		(dotimes (j nr-colunas-peca)
-			(if (aref peca i j)
-				(tabuleiro-preenche! (estado-tabuleiro e2) (+ i altura) (+ j coluna-esq)))))
-	
-	;;Atualizar lista de pecas por colocar e lista pecas colocadas
+			(dotimes (j nr-colunas-peca)
+				(if (aref peca i j)
+					(tabuleiro-preenche! (estado-tabuleiro e2) (+ i folga) (+ j coluna-esq)))))
+					
+	; Atualizar lista de pecas por colocar e lista pecas colocadas
 	(setf peca-colocada (car (estado-pecas-por-colocar e2))) ;;nome da peca esta em 1 lugar na lista
 	(push peca-colocada (estado-pecas-colocadas e2))	;por na lista de colocadas
 	(pop (estado-pecas-por-colocar e2)) ;tirar da lista das pecas por colocar
 	
-	;;Verificar se topo fica preenchido, se nao calcular pontos
+		; Verificar se topo fica preenchido, se nao calcular pontos
 	(if (not(tabuleiro-topo-preenchido-p tab2))
-		;;calcular numero de linhas feitas
+		; calcular numero de linhas feitas
 		(progn 
 			(loop for i from 17 downto 0 do  ; vai de cima para baixo para nao se preocupar com a descida das linhas
 				(if 
@@ -312,7 +299,8 @@
 				(2 (setf (estado-pontos e2) (+ (estado-pontos e2) 300)))
 				(3 (setf (estado-pontos e2) (+ (estado-pontos e2) 500)))
 				(otherwise (setf (estado-pontos e2) (+ (estado-pontos e2) 800))))))
-	e2))	
+
+	e2))
 	
 (defun custo-oportunidade (e1)
 	(let(
@@ -459,12 +447,13 @@
 	(let 
 		((lista '()) (node n))
 		(loop do
-			(push (node-A*-accao node) lista)
+			(if 
+				(not (eq (node-A*-accao node) nil))
+				(push (node-A*-accao node) lista))
 			(setf node (node-A*-pai node))
 		while (not (eq node nil)))
 	lista))
 
-		
 		
 (defun procura-A* (p h)
 	(let
@@ -506,9 +495,10 @@
 						
 						(if 																		;verifica se pode adicionar o node aos abertos
 							(and
-								(not (eq (funcall faccoes (node-A*-estado novoestado)) nil))		;estado final sem solucao
+								(not (eq (funcall faccoes novoestado) nil))							;estado final sem solucao
 								(not (esta-contido closed novonode)))								;existe na lista de fechados
 							(push novonode opened)))												;adiciona no a lista de abertos
+; (print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")		
 			
 			while (not (eq opened nil))))															;fim do loop  lista opened vazia ;fecha o block soluxion
 ;CONSTROI A SOLUCAO
@@ -573,4 +563,4 @@
 	
 	
 	
-(load "utils.fas")
+; (load "utils.fas")
